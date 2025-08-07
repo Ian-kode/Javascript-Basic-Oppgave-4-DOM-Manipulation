@@ -41,14 +41,14 @@ const year = futureDate.getFullYear(); // The getFullYear() method extracts the 
 const hours = futureDate.getHours(); // The getHours() method extracts the hour (0–23, e.g. 17) from the futureDate object and stores it in the variable hours.
 const minutes = futureDate.getMinutes(); // The getMinutes() method extracts the minute (0-59, e.g. 30) from the futureDate object and stores it in the variable minutes.
 
-let month = futureDate.getMonth(); // The getMonth() method extracts the current month number (0-11) from futureDate and stores it in the variable month.
-month = months[month]; // The number (month number, 0-11) from the variable month is
-const date = futureDate.getDate();
+let month = futureDate.getMonth(); // The getMonth() method extracts the month number (0-11) from futureDate and stores it in the variable month.
+month = months[month]; // The number stored in the variable month (0–11) is used to get the matching month name from the months array and reassigning/updating the variable month to now hold that name.
+const date = futureDate.getDate(); // The getDate() method extracts the day of the month (1-31) from the futureDate object and stores it in the variable date.
 
-const weekday = weekdays[futureDate.getDay()];
+const weekday = weekdays[futureDate.getDay()]; // The getDay() method extracts the day of the week (0–6) from the futureDate object, which is used to find the matching day name from the weekdays array and stores it in the variable weekday.
 
 // Changing .giveaway text and adding the futureDate
-giveaway.textContent = `Giveaway ends on ${weekday}, ${date} ${month} ${year} ${hours}:${minutes}pm`;
+giveaway.textContent = `Giveaway ends on ${weekday}, ${date} ${month} ${year} ${hours}:${minutes}pm`; // Editing the text on the element that is assigned to the variable giveaway using textContent property to "Giveaway ends on (current date 10 days in the future)", using template a literal.
 
 // Future time in millisecond
 const futureTime = futureDate.getTime();
