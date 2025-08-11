@@ -47,51 +47,61 @@ const date = futureDate.getDate(); // The getDate() method extracts the day of t
 
 const weekday = weekdays[futureDate.getDay()]; // The getDay() method extracts the day of the week (0–6) from the futureDate object, which is used to find the matching day name from the weekdays array and stores it in the variable weekday.
 
-// Changing .giveaway text and adding the futureDate
-giveaway.textContent = `Giveaway ends on ${weekday}, ${date} ${month} ${year} ${hours}:${minutes}pm`; // Editing the text on the element that is assigned to the variable giveaway using textContent property to "Giveaway ends on (current date 10 days in the future)", using template a literal.
+// Changing .giveaway text and adding the futureDate----------------------------------------------------------------------
+giveaway.textContent = `Giveaway ends on ${weekday}, ${date} ${month} ${year} ${hours}:${minutes}pm`;
+// Sets the text of the element stored in the giveaway variable using the textContent property.
+// It displays: "Giveaway ends on ..." using a template literal with values from the futureDate (10 days from the current date).
 
-// Future time in millisecond
-const futureTime = futureDate.getTime();
+// Future time in millisecond-----------------------------------------------------------------------------------------
+const futureTime = futureDate.getTime(); // The getTime() method gets the time value (in milliseconds since January 1, 1970) from the futureDate object and stores it in the futureTime variable.
 
 function getRemainingTime() {
-  const today = new Date().getTime();
-  const t = futureTime - today;
+  // This function runs **every second** to update the countdown.
+  const today = new Date().getTime(); // The getTime() method gets the current time value (in milliseconds since January 1, 1970) from a new Date object and stores it in the variable today.
+  const time = futureTime - today; // Calculates the remaining time by subtracting the current time (today) from the futureTime variable.
   // 1s = 1000ms
   // 1min = 60secs
   // 1hr = 60mins
   // 1day = 24hrs
 
-  // Value in milliseconds
+  // Value in milliseconds-----------------------------------------------------------------------------------------
   const oneDay = 24 * 60 * 60 * 1000; // 24hrs * 60mins * 60secs * 1000millisecs = oneDay in milliseconds
   const oneHour = 60 * 60 * 1000; // 60mins * 60secs * 1000millisecs = oneHour in milliseconds
   const oneMinute = 60 * 1000; // 60mins * 1000millisecs = oneMinute in milliseconds
 
-  // Calculate all values
-  let days = t / oneDay;
-  days = Math.floor(days);
-  let hours = Math.floor((t % oneDay) / oneHour);
-  let minutes = Math.floor((t % oneHour) / oneMinute);
-  let seconds = Math.floor((t % oneMinute) / 1000);
+  // Calculate all values--------------------------------------------------------------------
+  // Converting total milliseconds to days
+  let days = time / oneDay; // Divides the total milliseconds by the number of milliseconds in a day. This gives us the total number of days left, including fractions (e.g., 4.75 days).
+  days = Math.floor(days); //  Removes the decimal part (rounds down) so we only get whole days left (e.g., 4 days).
+
+  // Finding the remaining hours, minutes, seconds--------------------------------------------------------
+  let hours = Math.floor((time % oneDay) / oneHour); // (time % oneDay) - finds the leftover milliseconds after removing all full days and (/ oneHour) converts that leftover fraction of a day into hours. Math.floor(...) - keeps only the whole hours.
+  let minutes = Math.floor((time % oneHour) / oneMinute); // (time % oneHour) - finds the leftover milliseconds after removing all full hours and (/ oneMinute) converts that leftover into minutes. Math.floor(...) - keeps only the whole minutes.
+  let seconds = Math.floor((time % oneMinute) / 1000); // (time % oneMinute) -  finds the leftover milliseconds after removing all full minutes and (/ 1000) converts milliseconds to seconds. Math.floor(...) - keeps only the whole seconds.
 
   // Set values array
-  const values = [days, hours, minutes, seconds];
+  const values = [days, hours, minutes, seconds]; // Creates an array named values that contains the current countdown time parts: days, hours, minutes, and seconds.
 
   function format(item) {
+    // This function takes a number (item) as a parameter.
     if (item < 10) {
-      return (item = `0${item}`);
+      // If the number is less than 10, add a "0" in front of it.
+      return (item = `0${item}`); // So that it always shows two digits (e.g., 5 becomes "05").
     }
-    return item;
+    return item; // Otherwise, just return the number as it is.
   }
 
   items.forEach(function (item, index) {
-    item.innerHTML = format(values[index]);
+    // Loops through each element in items. Function (item, index) is a callback function run for each element: item - the current HTML element being looped over. index - the position number of that element in the list (0 for the first, 1 for the second, etc.).
+    item.innerHTML = format(values[index]); // Gets the matching countdown value (e.g., days, hours, minutes, seconds) from the values array. Format() makes sure that value is displayed as two digits (e.g., 5 becomes "05"). item.innerHTML = updates the HTML content of the <h4> with that formatted value.
   });
-  if (t < 0) {
-    clearInterval(countDown);
-    deadline.innerHTML = `<h4 class="expired">Sorry, this giveaway has expired...</h4> `;
+  if (time < 0) {
+    // Checks if time is less than 0 (meaning the future date has already passed).
+    clearInterval(countDown); // Stops the countdown timer from running anymore.
+    deadline.innerHTML = `<h4 class="expired">Sorry, this giveaway has expired...</h4> `; // Replaces the whole .deadline section with a message saying the giveaway expired.
   }
 }
 // Countdown
-let countDown = setInterval(getRemainingTime, 1000);
+let countDown = setInterval(getRemainingTime, 1000); // Calls a function repeatedly every 1000 milliseconds (1 second). The return value from setInterval() (stored in countDown) is an ID that can later be pass to clearInterval() to stop it.
 
 getRemainingTime();
